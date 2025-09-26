@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Allies Team - Студия визуальных новелл</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Основные стили и сброс */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        :root {
+            --primary: #6a0dad;
+            --primary-dark: #4a077a;
+            --secondary: #ff6b6b;
+            --accent: #ffd166;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        body {
+            background-color: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Стили для плавных переходов между секциями */
+        .section {
+            min-height: 100vh;
+            padding: 100px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(50px);
+        }
+
+        .section.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(26, 26, 46, 0.9) 0%, rgba(74, 7, 122, 0.7) 100%);
+            z-index: -1;
+        }
+
+        /* Стили для навигации */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(26, 26, 46, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 20px 0;
+            transition: var(--transition);
+        }
+
+        nav.scrolled {
+            padding: 15px 0;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo i {
+            margin-right: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            color: var(--light);
+            text-decoration: none;
+            font-weight: 500;
+            position: relative;
+            padding: 5px 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        /* Стили для главного экрана */
+        .hero {
+            text-align: center;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://images.unsplash.com/photo-1531685250784-7569952593d2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1934&q=80');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, var(--accent), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px rgba(255, 209, 102, 0.5);
+            }
+            to {
+                text-shadow: 0 0 20px rgba(255, 209, 102, 0.8), 0 0 30px rgba(255, 209, 102, 0.6);
+            }
+        }
+
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            padding: 15px 30px;
+            background: var(--primary);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            border: 2px solid transparent;
+            margin-top: 20px;
+        }
+
+        .cta-button:hover {
+            background: transparent;
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(106, 13, 173, 0.3);
+        }
+
+        /* Стили для секции проектов */
+        .projects-section {
+            background: linear-gradient(45deg, var(--dark) 0%, var(--primary-dark) 100%);
+        }
+
+        .section-title {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .projects-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 40px;
+            max-width: 1200px;
+        }
+
+        .project-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            overflow: hidden;
+            width: 350px;
+            transition: var(--transition);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .project-image {
+            height: 200px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .project-info {
+            padding: 25px;
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+            color: var(--accent);
+        }
+
+        .project-description {
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .project-button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .project-button:hover {
+            background: var(--primary-dark);
+        }
+
+        /* Стили для модального окна */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: var(--dark);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            padding: 30px;
+            position: relative;
+            transform: scale(0.7);
+            transition: transform 0.3s ease;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--light);
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--secondary);
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .release-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .release-list li {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.05);
+            margin-bottom: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .release-status {
+            padding: 5px 10px;
+            background: var(--primary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        /* Стили для секции о компании */
+        .about-section {
+            background: linear-gradient(45deg, var(--primary-dark) 0%, var(--dark) 100%);
+        }
+
+        .about-container {
+            max-width: 1000px;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-text {
+            flex: 1;
+        }
+
+        .about-image {
+            flex: 1;
+            height: 400px;
+            background: url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Стили для футера */
+        footer {
+            background: var(--primary-dark);
+            padding: 50px 20px 20px;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 40px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .footer-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--accent);
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--light);
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            background: var(--accent);
+            color: var(--dark);
+            transform: translateY(-5px);
+        }
+
+        .copyright {
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+            
+            .about-container {
+                flex-direction: column;
+            }
+            
+            .about-image {
+                width: 100%;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+
+        /* Анимация появления элементов при прокрутке */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.8s ease forwards;
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav id="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo"><i class="fas fa-gamepad"></i> The Allies Team</a>
+            <ul class="nav-links">
+                <li><a href="#home">Главная</a></li>
+                <li><a href="#projects">Проекты</a></li>
+                <li><a href="#about">О нас</a></li>
+                <li><a href="#contact">Контакты</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Главный экран -->
+    <section id="home" class="section hero active">
+        <h1>The Allies Team</h1>
+        <p>Студия, создающая захватывающие визуальные новеллы с уникальными сюжетами и персонажами. Погрузитесь в наши миры и откройте для себя удивительные истории!</p>
+        <a href="#projects" class="cta-button">Наши проекты</a>
+    </section>
+
+    <!-- Секция проектов -->
+    <section id="projects" class="section projects-section">
+        <h2 class="section-title">Наши проекты</h2>
+        <div class="projects-container">
+            <!-- Проект 1 -->
+            <div class="project-card fade-in">
+                <div class="project-image" style="background-image: url('https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');"></div>
+                <div class="project-info">
+                    <h3 class="project-title">Teachers' Games: First Episode</h3>
+                    <p class="project-description">История о преподавателях ПХТТ, которые попали на игры в кальмарах. Сможете ли вы помочь им выжить в этом смертельном испытании?</p>
+                    <button class="project-button" data-project="teachers1">Подробнее</button>
+                </div>
+            </div>
+
+            <!-- Проект 2 -->
+            <div class="project-card fade-in">
+                <div class="project-image" style="background-image: url('https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');"></div>
+                <div class="project-info">
+                    <h3 class="project-title">Teachers' Games: Second Episode</h3>
+                    <p class="project-description">Продолжение захватывающей истории преподавателей ПХТТ. Новые испытания, новые загадки и новые персонажи ждут вас!</p>
+                    <button class="project-button" data-project="teachers2">Подробнее</button>
+                </div>
+            </div>
+
+            <!-- Проект 3 -->
+            <div class="project-card fade-in">
+                <div class="project-image" style="background-image: url('https://images.unsplash.com/photo-1534447677768-be436bb09401?ixlib=rb-4.0.3&auto=format&fit=crop&w=2094&q=80');"></div>
+                <div class="project-info">
+                    <h3 class="project-title">The Red Revenge</h3>
+                    <p class="project-description">Мрачная история о мести, предательстве и искуплении. Сможете ли вы распутать клубок интриг и найти правду?</p>
+                    <button class="project-button" data-project="redrevenge">Подробнее</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Секция о компании -->
+    <section id="about" class="section about-section">
+        <div class="about-container">
+            <div class="about-text">
+                <h2 class="section-title">О нашей студии</h2>
+                <p>The Allies Team - это команда энтузиастов, объединенных любовью к созданию визуальных новелл. Мы верим, что каждая история заслуживает быть рассказанной, и стремимся создавать проекты, которые оставят след в сердцах наших игроков.</p>
+                <p>Наша миссия - разрабатывать качественные визуальные новеллы с глубокими сюжетами, запоминающимися персонажами и красивой графикой. Мы постоянно совершенствуем наши навыки и экспериментируем с новыми идеями.</p>
+                <p>Присоединяйтесь к нашему сообществу и станьте частью удивительного мира The Allies Team!</p>
+            </div>
+            <div class="about-image"></div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3 class="footer-title">The Allies Team</h3>
+                <p>Студия разработки визуальных новелл. Создаем увлекательные истории с 2023 года.</p>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">Контакты</h3>
+                <p><i class="fas fa-envelope"></i> contact@allies-team.com</p>
+                <p><i class="fas fa-phone"></i> +7 (XXX) XXX-XX-XX</p>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-vk"></i></a>
+                    <a href="#"><i class="fab fa-telegram"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                    <a href="#"><i class="fab fa-discord"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3 class="footer-title">Подписка на новости</h3>
+                <p>Будьте в курсе наших новых проектов и обновлений!</p>
+                <form id="subscribe-form">
+                    <input type="email" placeholder="Ваш email" required>
+                    <button type="submit" class="cta-button" style="margin-top: 10px; padding: 10px 20px;">Подписаться</button>
+                </form>
+            </div>
+        </div>
+        <div class="copyright">
+            <p>&copy; 2023 The Allies Team. Все права защищены.</p>
+        </div>
+    </footer>
+
+    <!-- Модальные окна для проектов -->
+    <div id="modal-teachers1" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title">Teachers' Games: First Episode</h3>
+            <p>История о преподавателях ПХТТ, которые попали на игры в кальмарах. Сможете ли вы помочь им выжить в этом смертельном испытании?</p>
+            <ul class="release-list">
+                <li>Трейлер Teachers' Games: First Edition <span class="release-status">Неопределенный срок</span></li>
+                <li>Демо-версия Teachers' Games: First Edition <span class="release-status">Неопределенный срок</span></li>
+                <li>Полная версия Teachers' Games: First Edition <span class="release-status">Неопределенный срок</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="modal-teachers2" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title">Teachers' Games: Second Episode</h3>
+            <p>Продолжение захватывающей истории преподавателей ПХТТ. Новые испытания, новые загадки и новые персонажи ждут вас!</p>
+            <ul class="release-list">
+                <li>Трейлер Teachers' Games: Second Edition <span class="release-status">Неопределенный срок</span></li>
+                <li>Демо-версия Teachers' Games: Second Edition <span class="release-status">Неопределенный срок</span></li>
+                <li>Полная версия Teachers' Games: Second Edition <span class="release-status">Неопределенный срок</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="modal-redrevenge" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3 class="modal-title">The Red Revenge</h3>
+            <p>Мрачная история о мести, предательстве и искуплении. Сможете ли вы распутать клубок интриг и найти правду?</p>
+            <ul class="release-list">
+                <li>Трейлер The Red Revenge <span class="release-status">Неопределенный срок</span></li>
+                <li>Демо-версия The Red Revenge <span class="release-status">Неопределенный срок</span></li>
+                <li>Полная версия The Red Revenge <span class="release-status">Неопределенный срок</span></li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Плавная прокрутка для навигационных ссылок
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+
+        // Изменение навигации при прокрутке
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 100) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+            
+            // Активация секций при прокрутке
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.scrollY >= sectionTop - 300 && window.scrollY < sectionTop + sectionHeight - 100) {
+                    section.classList.add('active');
+                }
+            });
+        });
+
+        // Открытие модальных окон для проектов
+        document.querySelectorAll('.project-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const projectId = this.getAttribute('data-project');
+                const modal = document.getElementById(`modal-${projectId}`);
+                if (modal) {
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Блокировка прокрутки фона
+                }
+            });
+        });
+
+        // Закрытие модальных окон
+        document.querySelectorAll('.close-modal').forEach(closeBtn => {
+            closeBtn.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                    document.body.style.overflow = 'auto'; // Восстановление прокрутки
+                }
+            });
+        });
+
+        // Закрытие модального окна при клике вне его
+        window.addEventListener('click', function(e) {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('active');
+                document.body.style.overflow = 'auto';
+            }
+        });
+
+        // Анимация появления элементов при прокрутке
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('fade-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.project-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Обработка формы подписки
+        document.getElementById('subscribe-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = this.querySelector('input[type="email"]').value;
+            alert(`Спасибо за подписку! На адрес ${email} будут приходить уведомления о наших новостях.`);
+            this.reset();
+        });
+
+        // Инициализация анимации для первой секции
+        document.addEventListener('DOMContentLoaded', function() {
+            const heroSection = document.getElementById('home');
+            if (heroSection) {
+                heroSection.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>
